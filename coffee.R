@@ -23,7 +23,6 @@ font2 <- "Fira Sans Extra Condensed"
 font3 <- "Lobster Two"
 
 
-#gg_record(dir = "temp", device = "png", width = 10, height = 10, units = "in", dpi = 320)
 
 starbucks <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-12-21/starbucks.csv')
 
@@ -33,9 +32,6 @@ remove.list <- paste(c("Tea", "Frappuccino", "Refreshers", "Chai",
 caff <- starbucks %>% 
   distinct(product_name, size, serv_size_m_l, sugar_g, caffeine_mg) %>% 
   filter(caffeine_mg > 100) %>%
-  # group_by(product_name, size) %>% 
-  # filter(caffeine_mg == max(caffeine_mg)) %>%
-  # ungroup() #%>% 
   group_by(product_name, size) %>% 
   filter(sugar_g == max(sugar_g)) %>%
   ungroup() %>% 
@@ -66,15 +62,13 @@ p_title <- "How Much Caffeine Is in Your Average Cup of Coffee?"
 p_subtitle <- "Caffeine, sugar and serving size of Starbucks Drinks \n(showing drinks that contain at least 100 mg caffeine)"
 pal <- met.brewer("OKeeffe2", type = "continuous")
 
-# Most basic bubble plot
+# Bubble plot
 p <- caff2 %>% 
   ggplot(aes(x=reorder(size, as.numeric(serv_size_m_l)),
              y=reorder(product_name, as.numeric(sugar_g)) , 
              size = sugar_g,
              fill=caffeine_mg)) +
   geom_point(alpha=1, shape=21, color = "#4D4D4D") +
-  #geom_tile(aes(width = Inf, fill =typefill), alpha = 0.4) + 
-  #scale_fill_manual(values = c("green", "red", "blue")) +
   scale_radius(range = c(3, 15)) +
   scale_fill_stepsn(colors = pal, name = "Coffeine (mg)") +
   labs(title = p_title,
@@ -120,16 +114,13 @@ ggdraw(p) +
             y=0.755, 
             size=11, 
             hjust = 0,
-            #family=font2, 
             color="#4f2217",
             lineheight = 0.95,
             vjust = 1
             )  +
   draw_text(text = "@leynu_ | Source: Starbucks", 
             x=.1, y=0.016, 
-            #color="#4f2217", 
             size=10, 
-            #family=font2#, 
             fontface="italic"
   )
 
